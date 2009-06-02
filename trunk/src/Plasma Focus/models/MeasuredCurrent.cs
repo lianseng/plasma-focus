@@ -329,7 +329,7 @@ namespace Plasma_Focus.models
             metrics.radialSlope = (metrics.pinch.reading - metrics.midRadialCurrent) / (metrics.pinch.time - metrics.midRadialTime);
 
             // calculate a point to start measured R2
-            midRiseTime = measured[0].time + (measured[peakIndex].time - measured[0].time) / 2;
+            midRiseTime =measured[peakIndex].time / 2;
 
             Debug.WriteLine("End time " + endTime + "  radial slope " + metrics.radialSlope +
                   " mid radial current " + metrics.midRadialCurrent + "  mid radial time: " + metrics.midRadialTime);

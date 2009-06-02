@@ -71,6 +71,8 @@ namespace Plasma_Focus.models.fitting
         public System.ComponentModel.BackgroundWorker worker;
         #endregion
 
+        const int RETRIES = 2;
+
         public AutoFit(System.ComponentModel.BackgroundWorker worker, CurrentReading pinch)
         {
             this.worker = worker;
@@ -114,9 +116,9 @@ namespace Plasma_Focus.models.fitting
             loadParametersFromMachine(s.machine);
 
             GAFit.w1 = 1;                   // r2 is useful but
-            GAFit.w3 = s.machine.currentData.metrics.pinch.reading / (s.machine.currentData.metrics.peak.reading - s.machine.currentData.metrics.pinch.reading);
-            GAFit.w4 = GAFit.w3 * 2;        // pinch is not accurate
-            GAFit.w2 = GAFit.w4 * 2;        // peak is the most accurately known
+            GAFit.w3 = s.machine.currentData.metrics.peak.reading / (s.machine.currentData.metrics.peak.reading - s.machine.currentData.metrics.pinch.reading);
+            GAFit.w4 = GAFit.w3 * 1.2;        // pinch is not accurate
+            GAFit.w2 = GAFit.w4 * 1.2;        // peak is the most accurately known
             
             GAFit.a = this;
 
@@ -157,7 +159,7 @@ namespace Plasma_Focus.models.fitting
                 Debug.WriteLine("        pinch " + Metrics.finalPinchDiff);
                 Debug.WriteLine("        ime   " + Metrics.finalPinchTimeDiff);
                 if (worker.CancellationPending == true) return 0;
-                if (loops++ == 3) break;
+                if (loops++ == RETRIES) break;
                 Debug.WriteLine(loops);
             } while (r2 < 0.98 || Metrics.finalPinchDiff > 0.4 || Metrics.finalPeakDiff > 0.3);
 
@@ -227,7 +229,7 @@ namespace Plasma_Focus.models.fitting
                 Debug.WriteLine("        time  " + Metrics.finalPeakTimeDiff);
                 Debug.WriteLine("        pinch " + Metrics.finalPinchDiff);
                 Debug.WriteLine("        ime   " + Metrics.finalPinchTimeDiff);
-                if (loops++ == 3) break;
+                if (loops++ == RETRIES) break;
                 
                 if (worker.CancellationPending == true) return 0;
                
@@ -246,7 +248,7 @@ namespace Plasma_Focus.models.fitting
                 Debug.WriteLine("        pinch " + Metrics.finalPinchDiff);
                 Debug.WriteLine("        ime   " + Metrics.finalPinchTimeDiff);
                 if (worker.CancellationPending == true) return 0;
-                if (loops++ == 3) break;
+                if (loops++ == RETRIES) break;
                 
             } while (r2 < 0.98 || Metrics.finalPinchDiff > 0.4 || Metrics.finalPeakDiff > 0.3);
 

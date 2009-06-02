@@ -256,6 +256,7 @@ namespace Plasma_Focus.models.fitting.ga
                     seed = new Random();
                     Chromosome.MutationRate = seed.NextDouble();
                     this.crossoverRate = seed.NextDouble();
+                    final = false;
                     stagnant = 0;
                 }
             } 
