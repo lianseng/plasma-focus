@@ -42,6 +42,7 @@
             this.massf = new System.Windows.Forms.NumericUpDown();
             this.SaveCurrentsBtn = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.StopBtn = new System.Windows.Forms.Button();
             this.FineTuneBtn = new System.Windows.Forms.Button();
             this.ReTuneBtn = new System.Windows.Forms.Button();
             this.FireBtn = new System.Windows.Forms.Button();
@@ -57,9 +58,7 @@
             this.TuneElectrical = new System.Windows.Forms.Button();
             this.lblL0 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.progressStatus = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.StopBtn = new System.Windows.Forms.Button();
             this.PickPinchBtn = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.PinchCurrent = new System.Windows.Forms.NumericUpDown();
@@ -67,6 +66,14 @@
             this.PinchTime = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.Fit = new System.Windows.Forms.GroupBox();
+            this.SlopeError = new System.Windows.Forms.TextBox();
+            this.PinchError = new System.Windows.Forms.TextBox();
+            this.PeakError = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.progressStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.currf)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.currfr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.massfr)).BeginInit();
@@ -80,6 +87,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.PinchCurrent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PinchTime)).BeginInit();
             this.groupBox3.SuspendLayout();
+            this.Fit.SuspendLayout();
             this.SuspendLayout();
             // 
             // CurrentGraph
@@ -125,9 +133,9 @@
             0,
             0,
             196608});
-            this.currf.Location = new System.Drawing.Point(20, 64);
+            this.currf.Location = new System.Drawing.Point(105, 38);
             this.currf.Name = "currf";
-            this.currf.Size = new System.Drawing.Size(76, 20);
+            this.currf.Size = new System.Drawing.Size(60, 20);
             this.currf.TabIndex = 20;
             // 
             // currfr
@@ -139,16 +147,16 @@
             0,
             0,
             196608});
-            this.currfr.Location = new System.Drawing.Point(20, 133);
+            this.currfr.Location = new System.Drawing.Point(105, 97);
             this.currfr.Name = "currfr";
-            this.currfr.Size = new System.Drawing.Size(76, 20);
+            this.currfr.Size = new System.Drawing.Size(60, 20);
             this.currfr.TabIndex = 21;
             // 
             // currfLbl
             // 
             this.currfLbl.AutoSize = true;
             this.currfLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currfLbl.Location = new System.Drawing.Point(120, 66);
+            this.currfLbl.Location = new System.Drawing.Point(105, 20);
             this.currfLbl.Name = "currfLbl";
             this.currfLbl.Size = new System.Drawing.Size(28, 13);
             this.currfLbl.TabIndex = 22;
@@ -158,7 +166,7 @@
             // 
             this.currfrLbl.AutoSize = true;
             this.currfrLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currfrLbl.Location = new System.Drawing.Point(120, 135);
+            this.currfrLbl.Location = new System.Drawing.Point(107, 79);
             this.currfrLbl.Name = "currfrLbl";
             this.currfrLbl.Size = new System.Drawing.Size(31, 13);
             this.currfrLbl.TabIndex = 23;
@@ -168,7 +176,7 @@
             // 
             this.massfrLbl.AutoSize = true;
             this.massfrLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.massfrLbl.Location = new System.Drawing.Point(120, 100);
+            this.massfrLbl.Location = new System.Drawing.Point(29, 79);
             this.massfrLbl.Name = "massfrLbl";
             this.massfrLbl.Size = new System.Drawing.Size(37, 13);
             this.massfrLbl.TabIndex = 27;
@@ -178,7 +186,7 @@
             // 
             this.massfLbl.AutoSize = true;
             this.massfLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.massfLbl.Location = new System.Drawing.Point(120, 29);
+            this.massfLbl.Location = new System.Drawing.Point(32, 20);
             this.massfLbl.Name = "massfLbl";
             this.massfLbl.Size = new System.Drawing.Size(34, 13);
             this.massfLbl.TabIndex = 26;
@@ -193,9 +201,9 @@
             0,
             0,
             196608});
-            this.massfr.Location = new System.Drawing.Point(20, 98);
+            this.massfr.Location = new System.Drawing.Point(32, 97);
             this.massfr.Name = "massfr";
-            this.massfr.Size = new System.Drawing.Size(76, 20);
+            this.massfr.Size = new System.Drawing.Size(60, 20);
             this.massfr.TabIndex = 25;
             // 
             // massf
@@ -207,15 +215,15 @@
             0,
             0,
             196608});
-            this.massf.Location = new System.Drawing.Point(20, 29);
+            this.massf.Location = new System.Drawing.Point(32, 38);
             this.massf.Name = "massf";
-            this.massf.Size = new System.Drawing.Size(76, 20);
+            this.massf.Size = new System.Drawing.Size(60, 20);
             this.massf.TabIndex = 24;
             // 
             // SaveCurrentsBtn
             // 
             this.SaveCurrentsBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.SaveCurrentsBtn.Location = new System.Drawing.Point(304, 579);
+            this.SaveCurrentsBtn.Location = new System.Drawing.Point(223, 579);
             this.SaveCurrentsBtn.Name = "SaveCurrentsBtn";
             this.SaveCurrentsBtn.Size = new System.Drawing.Size(113, 32);
             this.SaveCurrentsBtn.TabIndex = 14;
@@ -234,20 +242,31 @@
             this.groupBox1.Controls.Add(this.massfr);
             this.groupBox1.Controls.Add(this.currfrLbl);
             this.groupBox1.Controls.Add(this.massf);
-            this.groupBox1.Controls.Add(this.ReTuneBtn);
+            this.groupBox1.Controls.Add(this.FireBtn);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(545, 87);
+            this.groupBox1.Location = new System.Drawing.Point(551, 121);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(331, 174);
+            this.groupBox1.Size = new System.Drawing.Size(331, 140);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Model Parameters";
             // 
+            // StopBtn
+            // 
+            this.StopBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StopBtn.Location = new System.Drawing.Point(715, 537);
+            this.StopBtn.Name = "StopBtn";
+            this.StopBtn.Size = new System.Drawing.Size(113, 32);
+            this.StopBtn.TabIndex = 70;
+            this.StopBtn.Text = "Stop Tuning";
+            this.StopBtn.UseVisualStyleBackColor = true;
+            this.StopBtn.Click += new System.EventHandler(this.StopBtn_Click);
+            // 
             // FineTuneBtn
             // 
-            this.FineTuneBtn.Location = new System.Drawing.Point(201, 116);
+            this.FineTuneBtn.Location = new System.Drawing.Point(196, 89);
             this.FineTuneBtn.Name = "FineTuneBtn";
-            this.FineTuneBtn.Size = new System.Drawing.Size(113, 32);
+            this.FineTuneBtn.Size = new System.Drawing.Size(109, 32);
             this.FineTuneBtn.TabIndex = 68;
             this.FineTuneBtn.Text = "Fine Tune";
             this.FineTuneBtn.UseVisualStyleBackColor = true;
@@ -255,7 +274,8 @@
             // 
             // ReTuneBtn
             // 
-            this.ReTuneBtn.Location = new System.Drawing.Point(201, 47);
+            this.ReTuneBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ReTuneBtn.Location = new System.Drawing.Point(571, 537);
             this.ReTuneBtn.Name = "ReTuneBtn";
             this.ReTuneBtn.Size = new System.Drawing.Size(113, 32);
             this.ReTuneBtn.TabIndex = 29;
@@ -266,9 +286,9 @@
             // FireBtn
             // 
             this.FireBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FireBtn.Location = new System.Drawing.Point(746, 20);
+            this.FireBtn.Location = new System.Drawing.Point(196, 30);
             this.FireBtn.Name = "FireBtn";
-            this.FireBtn.Size = new System.Drawing.Size(113, 32);
+            this.FireBtn.Size = new System.Drawing.Size(109, 32);
             this.FireBtn.TabIndex = 30;
             this.FireBtn.Text = "Fire Shot";
             this.FireBtn.UseVisualStyleBackColor = true;
@@ -277,7 +297,7 @@
             // resetBtn
             // 
             this.resetBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.resetBtn.Location = new System.Drawing.Point(160, 579);
+            this.resetBtn.Location = new System.Drawing.Point(79, 579);
             this.resetBtn.Name = "resetBtn";
             this.resetBtn.Size = new System.Drawing.Size(113, 32);
             this.resetBtn.TabIndex = 31;
@@ -288,17 +308,17 @@
             // R2
             // 
             this.R2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.R2.Location = new System.Drawing.Point(565, 27);
+            this.R2.Location = new System.Drawing.Point(28, 54);
             this.R2.Name = "R2";
             this.R2.ReadOnly = true;
-            this.R2.Size = new System.Drawing.Size(78, 20);
+            this.R2.Size = new System.Drawing.Size(54, 20);
             this.R2.TabIndex = 29;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(664, 30);
+            this.label2.Location = new System.Drawing.Point(25, 25);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 28;
@@ -314,9 +334,9 @@
             this.groupBox6.Controls.Add(this.TuneElectrical);
             this.groupBox6.Controls.Add(this.lblL0);
             this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox6.Location = new System.Drawing.Point(545, 275);
+            this.groupBox6.Location = new System.Drawing.Point(546, 270);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(331, 140);
+            this.groupBox6.Size = new System.Drawing.Size(331, 153);
             this.groupBox6.TabIndex = 65;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Electrical Parameters";
@@ -331,20 +351,20 @@
             0,
             0,
             131072});
-            this.R0.Location = new System.Drawing.Point(20, 108);
+            this.R0.Location = new System.Drawing.Point(115, 52);
             this.R0.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.R0.Name = "R0";
-            this.R0.Size = new System.Drawing.Size(76, 20);
+            this.R0.Size = new System.Drawing.Size(61, 20);
             this.R0.TabIndex = 2;
             // 
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label11.Location = new System.Drawing.Point(120, 100);
+            this.label11.Location = new System.Drawing.Point(112, 14);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(69, 37);
             this.label11.TabIndex = 10;
@@ -360,20 +380,20 @@
             0,
             0,
             131072});
-            this.C0.Location = new System.Drawing.Point(20, 67);
+            this.C0.Location = new System.Drawing.Point(37, 113);
             this.C0.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
             this.C0.Name = "C0";
-            this.C0.Size = new System.Drawing.Size(76, 20);
+            this.C0.Size = new System.Drawing.Size(61, 20);
             this.C0.TabIndex = 1;
             // 
             // lblC0
             // 
             this.lblC0.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblC0.Location = new System.Drawing.Point(120, 62);
+            this.lblC0.Location = new System.Drawing.Point(37, 80);
             this.lblC0.Name = "lblC0";
             this.lblC0.Size = new System.Drawing.Size(75, 33);
             this.lblC0.TabIndex = 4;
@@ -389,14 +409,14 @@
             0,
             0,
             131072});
-            this.L0.Location = new System.Drawing.Point(20, 26);
+            this.L0.Location = new System.Drawing.Point(37, 52);
             this.L0.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
             this.L0.Name = "L0";
-            this.L0.Size = new System.Drawing.Size(76, 20);
+            this.L0.Size = new System.Drawing.Size(61, 20);
             this.L0.TabIndex = 0;
             // 
             // TuneElectrical
@@ -404,7 +424,7 @@
             this.TuneElectrical.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TuneElectrical.Location = new System.Drawing.Point(201, 59);
             this.TuneElectrical.Name = "TuneElectrical";
-            this.TuneElectrical.Size = new System.Drawing.Size(113, 32);
+            this.TuneElectrical.Size = new System.Drawing.Size(109, 32);
             this.TuneElectrical.TabIndex = 69;
             this.TuneElectrical.Text = "Tune Electrical";
             this.TuneElectrical.UseVisualStyleBackColor = true;
@@ -413,7 +433,7 @@
             // lblL0
             // 
             this.lblL0.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblL0.Location = new System.Drawing.Point(122, 21);
+            this.lblL0.Location = new System.Drawing.Point(37, 16);
             this.lblL0.Name = "lblL0";
             this.lblL0.Size = new System.Drawing.Size(67, 35);
             this.lblL0.TabIndex = 2;
@@ -421,19 +441,10 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(552, 588);
+            this.progressBar1.Location = new System.Drawing.Point(549, 598);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(158, 23);
+            this.progressBar1.Size = new System.Drawing.Size(307, 23);
             this.progressBar1.TabIndex = 66;
-            // 
-            // progressStatus
-            // 
-            this.progressStatus.AutoSize = true;
-            this.progressStatus.Location = new System.Drawing.Point(548, 569);
-            this.progressStatus.Name = "progressStatus";
-            this.progressStatus.Size = new System.Drawing.Size(35, 13);
-            this.progressStatus.TabIndex = 67;
-            this.progressStatus.Text = "label3";
             // 
             // timer1
             // 
@@ -441,23 +452,12 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // StopBtn
-            // 
-            this.StopBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StopBtn.Location = new System.Drawing.Point(746, 579);
-            this.StopBtn.Name = "StopBtn";
-            this.StopBtn.Size = new System.Drawing.Size(113, 32);
-            this.StopBtn.TabIndex = 70;
-            this.StopBtn.Text = "Stop Tuning";
-            this.StopBtn.UseVisualStyleBackColor = true;
-            this.StopBtn.Click += new System.EventHandler(this.StopBtn_Click);
-            // 
             // PickPinchBtn
             // 
             this.PickPinchBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PickPinchBtn.Location = new System.Drawing.Point(199, 36);
+            this.PickPinchBtn.Location = new System.Drawing.Point(201, 36);
             this.PickPinchBtn.Name = "PickPinchBtn";
-            this.PickPinchBtn.Size = new System.Drawing.Size(113, 32);
+            this.PickPinchBtn.Size = new System.Drawing.Size(109, 32);
             this.PickPinchBtn.TabIndex = 73;
             this.PickPinchBtn.Text = "Pick Point";
             this.PickPinchBtn.UseVisualStyleBackColor = true;
@@ -471,9 +471,9 @@
             this.groupBox2.Controls.Add(this.PinchTime);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox2.Location = new System.Drawing.Point(547, 429);
+            this.groupBox2.Location = new System.Drawing.Point(546, 429);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(329, 129);
+            this.groupBox2.Size = new System.Drawing.Size(329, 93);
             this.groupBox2.TabIndex = 66;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pinch Point (guess)";
@@ -488,22 +488,22 @@
             0,
             0,
             131072});
-            this.PinchCurrent.Location = new System.Drawing.Point(20, 75);
+            this.PinchCurrent.Location = new System.Drawing.Point(110, 44);
             this.PinchCurrent.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
             this.PinchCurrent.Name = "PinchCurrent";
-            this.PinchCurrent.Size = new System.Drawing.Size(76, 20);
+            this.PinchCurrent.Size = new System.Drawing.Size(60, 20);
             this.PinchCurrent.TabIndex = 1;
             // 
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(120, 77);
+            this.label4.Location = new System.Drawing.Point(122, 20);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(112, 23);
+            this.label4.Size = new System.Drawing.Size(75, 23);
             this.label4.TabIndex = 4;
             this.label4.Text = "Current (kA)";
             // 
@@ -517,22 +517,22 @@
             0,
             0,
             131072});
-            this.PinchTime.Location = new System.Drawing.Point(20, 36);
+            this.PinchTime.Location = new System.Drawing.Point(37, 44);
             this.PinchTime.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
             this.PinchTime.Name = "PinchTime";
-            this.PinchTime.Size = new System.Drawing.Size(76, 20);
+            this.PinchTime.Size = new System.Drawing.Size(60, 20);
             this.PinchTime.TabIndex = 0;
             // 
             // label5
             // 
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label5.Location = new System.Drawing.Point(120, 38);
+            this.label5.Location = new System.Drawing.Point(37, 21);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(112, 23);
+            this.label5.Size = new System.Drawing.Size(61, 23);
             this.label5.TabIndex = 2;
             this.label5.Text = "Time (us)";
             // 
@@ -548,6 +548,90 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Model";
             // 
+            // Fit
+            // 
+            this.Fit.Controls.Add(this.SlopeError);
+            this.Fit.Controls.Add(this.PinchError);
+            this.Fit.Controls.Add(this.PeakError);
+            this.Fit.Controls.Add(this.label7);
+            this.Fit.Controls.Add(this.label6);
+            this.Fit.Controls.Add(this.label3);
+            this.Fit.Controls.Add(this.label2);
+            this.Fit.Controls.Add(this.R2);
+            this.Fit.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Fit.Location = new System.Drawing.Point(551, 5);
+            this.Fit.Name = "Fit";
+            this.Fit.Size = new System.Drawing.Size(324, 105);
+            this.Fit.TabIndex = 72;
+            this.Fit.TabStop = false;
+            this.Fit.Text = "Fit of curves";
+            // 
+            // SlopeError
+            // 
+            this.SlopeError.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SlopeError.Location = new System.Drawing.Point(252, 54);
+            this.SlopeError.Name = "SlopeError";
+            this.SlopeError.ReadOnly = true;
+            this.SlopeError.Size = new System.Drawing.Size(54, 20);
+            this.SlopeError.TabIndex = 36;
+            // 
+            // PinchError
+            // 
+            this.PinchError.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PinchError.Location = new System.Drawing.Point(176, 54);
+            this.PinchError.Name = "PinchError";
+            this.PinchError.ReadOnly = true;
+            this.PinchError.Size = new System.Drawing.Size(54, 20);
+            this.PinchError.TabIndex = 35;
+            // 
+            // PeakError
+            // 
+            this.PeakError.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PeakError.Location = new System.Drawing.Point(101, 54);
+            this.PeakError.Name = "PeakError";
+            this.PeakError.ReadOnly = true;
+            this.PeakError.Size = new System.Drawing.Size(54, 20);
+            this.PeakError.TabIndex = 34;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Location = new System.Drawing.Point(249, 25);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(59, 13);
+            this.label7.TabIndex = 33;
+            this.label7.Text = "Slope Error";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Location = new System.Drawing.Point(173, 25);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 13);
+            this.label6.TabIndex = 32;
+            this.label6.Text = "Pinch Error";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.Location = new System.Drawing.Point(99, 25);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(57, 13);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "Peak Error";
+            // 
+            // progressStatus
+            // 
+            this.progressStatus.AutoSize = true;
+            this.progressStatus.Location = new System.Drawing.Point(548, 576);
+            this.progressStatus.Name = "progressStatus";
+            this.progressStatus.Size = new System.Drawing.Size(35, 13);
+            this.progressStatus.TabIndex = 67;
+            this.progressStatus.Text = "label3";
+            // 
             // TuningPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -555,21 +639,20 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.Fit);
             this.Controls.Add(this.StopBtn);
             this.Controls.Add(this.resetBtn);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.R2);
             this.Controls.Add(this.progressStatus);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.SaveCurrentsBtn);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.FireBtn);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.ReTuneBtn);
             this.Controls.Add(this.CurrentGraph);
             this.Name = "TuningPanel";
-            this.Size = new System.Drawing.Size(879, 614);
+            this.Size = new System.Drawing.Size(885, 624);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.CurrentCurveReferencePanel_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.currf)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.currfr)).EndInit();
@@ -586,6 +669,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.PinchTime)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.Fit.ResumeLayout(false);
+            this.Fit.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -619,7 +704,6 @@
         private System.Windows.Forms.Label lblL0;
         internal System.Windows.Forms.NumericUpDown currf;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label progressStatus;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button FineTuneBtn;
         private System.Windows.Forms.Button TuneElectrical;
@@ -631,6 +715,14 @@
         private System.Windows.Forms.NumericUpDown PinchTime;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox Fit;
+        private System.Windows.Forms.TextBox SlopeError;
+        private System.Windows.Forms.TextBox PinchError;
+        private System.Windows.Forms.TextBox PeakError;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label progressStatus;
 
     }
 }

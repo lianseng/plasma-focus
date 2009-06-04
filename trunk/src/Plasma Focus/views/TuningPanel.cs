@@ -140,13 +140,12 @@ namespace Plasma_Focus.views
                 double start = s.machine.currentData.midRiseTime; 
                 
                 s.modelResults.metrics = new Metrics();
-                s.modelResults.updateModelMetrics(s.modelResults.metrics, s.machine.currentData.metrics.midRadialTime);
+                s.modelResults.updateModelMetrics(s.modelResults.metrics);
 
-                s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, start,end);
+                s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, 0/*start*/, end);
                  
                 Invoke(new MethodInvoker(EnableButton));
-                Invoke(new MethodInvoker(updatePanel));
-
+                Invoke(new MethodInvoker(updatePanel)); 
             }
             catch (ApplicationException ex)
             {
@@ -182,9 +181,9 @@ namespace Plasma_Focus.views
                 double start = s.machine.currentData.midRiseTime;
 
                 s.modelResults.metrics = new Metrics();
-                s.modelResults.updateModelMetrics(s.modelResults.metrics, s.machine.currentData.metrics.midRadialTime);
+                s.modelResults.updateModelMetrics(s.modelResults.metrics);
 
-                s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, start,end);
+                s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, 0/*start*/, end);
  
                 Invoke(new MethodInvoker(EnableButton));
                 Invoke(new MethodInvoker(updatePanel));
@@ -214,7 +213,7 @@ namespace Plasma_Focus.views
         {
             progressBar1.Increment(e.ProgressPercentage);
             progressStatus.Text = e.UserState.ToString();
-            if (e.ProgressPercentage < 10) return;
+            if (e.ProgressPercentage == 0) return;
             updatePanel();
         }
 
@@ -229,10 +228,8 @@ namespace Plasma_Focus.views
         {
 
             progressBar1.Increment(e.ProgressPercentage);
-            progressStatus.Text = e.UserState.ToString();
-            //if (e.ProgressPercentage == -1)
-            //    MessageBox.Show(progressStatus.Text);
-            if (e.ProgressPercentage < 10) return;
+            progressStatus.Text = e.UserState.ToString(); 
+            if (e.ProgressPercentage ==0) return;
             updatePanel();
         }
 
@@ -568,10 +565,33 @@ namespace Plasma_Focus.views
 
             redraw(null);
 
-           Simulator.sync.ReleaseMutex(); 
+            Simulator.sync.ReleaseMutex();    
+            
+            updateFitness();       
         }
 
       
+        public void updateFitness() {
+             Simulator s = Simulator.getInstance();
+             machine = s.machine;
+
+             R2.Text = String.Format("{0:0.####}", s.machine.r2);
+             
+             if (s.machine.currentData==null || s.modelResults == null || s.modelResults.metrics==null) 
+                 return;
+ 
+             Metrics measuredMetrics = s.machine.currentData.metrics;
+             Metrics computedMetrics =  s.modelResults.metrics;
+
+             PeakError.Text = String.Format("{0:0.####}", Metrics.peakDiff(measuredMetrics, computedMetrics));
+             PinchError.Text = String.Format("{0:0.####}", Metrics.pinchDiff(measuredMetrics, computedMetrics));
+             SlopeError.Text = String.Format("{0:0.####}", Metrics.radialSlopeDiff(measuredMetrics, computedMetrics));
+
+             this.Invalidate(); 
+            
+        }
+
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             progressBar1.Increment(10);
@@ -625,7 +645,6 @@ namespace Plasma_Focus.views
             if (s.machine.currentData != null)
             {
                 // s.machine.currentData.updateMeasuredMetrics(s.machine.currentData.array);
-                s.machine.currentData.reload();
 
                 // find goodness of fit, stop before expanded column row
                 CurrentReading[] computed = ModelResults.getComputedCurrentArray(s.modelResults.results);
@@ -634,18 +653,13 @@ namespace Plasma_Focus.views
                 double start = s.machine.currentData.midRiseTime;
 
                 s.modelResults.metrics = new Metrics();
-                s.modelResults.updateModelMetrics(s.modelResults.metrics, s.machine.currentData.metrics.midRadialTime);
+                s.modelResults.updateModelMetrics(s.modelResults.metrics);
 
-                s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, start,end);
+                s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, 0/*start*/, end);
 
-                double fit = s.machine.r2;
-
-                R2.Text = String.Format("{0:0.####}", fit);
-
-                //    PinchCurrent.Value = (decimal)s.machine.currentData.metrics.pinch.reading;
-                //    PinchTime.Value = (decimal)s.machine.currentData.metrics.pinch.time;
-
+                s.machine.currentData.reload(); 
                 CurrentGraph.Invalidate();
+                updateFitness();
             }
             // plot other curves
             MainForm main = ((MainForm)(this.ParentForm));
@@ -654,19 +668,17 @@ namespace Plasma_Focus.views
 
         }
 
-
         void DisableButtons()
         {
 
             MainForm main = ((MainForm)(this.ParentForm));
             main.resultsPanel.Enabled = main.graphsPanel.Enabled = false;
 
-            TuneElectrical.Enabled = FineTuneBtn.Enabled = FireBtn.Enabled = ReTuneBtn.Enabled = false;
+            PickPinchBtn.Enabled = TuneElectrical.Enabled = FineTuneBtn.Enabled = FireBtn.Enabled = ReTuneBtn.Enabled = false;
             progressStatus.Visible = progressBar1.Visible = true;
             StopBtn.Select();
             timer1.Start();
         }
-
 
         void EnableButton()
         {
@@ -675,7 +687,7 @@ namespace Plasma_Focus.views
 
             progressStatus.Visible = progressBar1.Visible = false;
             timer1.Stop();
-            TuneElectrical.Enabled = FineTuneBtn.Enabled = FireBtn.Enabled = ReTuneBtn.Enabled = true;
+            PickPinchBtn.Enabled = TuneElectrical.Enabled = FineTuneBtn.Enabled = FireBtn.Enabled = ReTuneBtn.Enabled = true;
         }
 
         private void ResetBtn_Click(object sender, EventArgs e)

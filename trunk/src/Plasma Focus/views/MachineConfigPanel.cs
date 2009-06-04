@@ -604,9 +604,15 @@ namespace Plasma_Focus.views
                 double start = s.machine.currentData.midRiseTime;
 
                 s.machine.r2 = MeasuredCurrent.calcR2(ModelResults.getComputedCurrentArray(s.modelResults.results),
-                    s.machine.currentData.array, start, end);
-                double fit = s.machine.r2;  
-                main.tuningPanel.setFitText(String.Format("{0:#.###}", fit));
+                s.machine.currentData.array, 0 /* start */, end);
+
+                // find goodness of fit, stop before expanded column row
+                CurrentReading[] computed = ModelResults.getComputedCurrentArray(s.modelResults.results);
+
+                s.modelResults.metrics = new Metrics();
+                s.modelResults.updateModelMetrics(s.modelResults.metrics);
+                //            double fit = s.machine.r2;
+                main.tuningPanel.updateFitness(); // setFitText(String.Format("{0:#.###}", fit));
             }
             // show results
             main.graphsPanel.Enabled = true;

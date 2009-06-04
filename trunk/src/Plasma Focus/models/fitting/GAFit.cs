@@ -81,6 +81,7 @@ namespace Plasma_Focus.models.fitting
                 // re-calc metrics
                 a.updateComputedMetrics();
 
+                // here we use .75 peak rise time as the start time 
                 r2 = MeasuredCurrent.calcR2(a.computed, a.measured,a.startTime(), a.endTime());
                 double p1 = 1 - (Metrics.peakDiff(a.measuredMetrics, a.computedMetrics));
 
@@ -171,8 +172,6 @@ namespace Plasma_Focus.models.fitting
             writeQuality(ga.stage);
             
             return genome;
-
-
         }
         #endregion axial
 
@@ -247,7 +246,7 @@ namespace Plasma_Focus.models.fitting
             ga.worker = a.worker;
 
             ga.stage = "Final stage"; 
-            ArrayList genome = ga.Go(gene, true);
+            ArrayList genome = ga.Go(gene, true);//false);
 
             double[] values;
             ga.GetBest(out values, out fitness);

@@ -47,6 +47,7 @@ namespace Plasma_Focus.models.fitting.ga
 
     public class GA
     {
+        int MutationFactor = 2;
         #region debug
         static StreamWriter sw = null;
 
@@ -155,7 +156,7 @@ namespace Plasma_Focus.models.fitting.ga
             Chromosome.MutationRate = mutationRate;
 
             thisGeneration = new ArrayList(generations);
-            report(2, "Creating initial population for " + stage);
+            report(0, "Creating initial population for " + stage);
         
             CreateChromosomes(start);
    
@@ -166,7 +167,7 @@ namespace Plasma_Focus.models.fitting.ga
             {
                 if (worker.CancellationPending == true) return thisGeneration;
 
-                report(i / generations * 100, stage + " generation " + i + ", fit = " + String.Format("{0:F4}", fittestFitness));
+                report((i+1) * 100 / generations, stage + " generation " + i + ", fit = " + String.Format("{0:F4}", fittestFitness));
 
                 CreateNextGeneration();
 
@@ -253,11 +254,12 @@ namespace Plasma_Focus.models.fitting.ga
                 if (++stagnant == 2)
                 {
                     Debug.WriteLine(-1, "Stagnant gene pool");
-                    seed = new Random();
-                    Chromosome.MutationRate = seed.NextDouble();
-                    this.crossoverRate = seed.NextDouble();
-                    final = false;
-                    stagnant = 0;
+                    //seed = new Random();
+                    //Chromosome.MutationRate += 0.1;
+                    this.crossoverRate += 0.1;
+                    final = true;
+                    MutationFactor *= 5;
+                    //stagnant = 0;
                 }
             } 
             else
@@ -362,8 +364,8 @@ namespace Plasma_Focus.models.fitting.ga
 
                 if (final)
                 {
-                    child1.Mutate(2);   // mutation factor is (0,1/5)
-                    child2.Mutate(2);
+                    child1.Mutate(MutationFactor);   // mutation factor is (0,1/5)
+                    child2.Mutate(MutationFactor);
                 }
                 else
                 { 

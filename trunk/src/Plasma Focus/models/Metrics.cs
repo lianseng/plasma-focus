@@ -112,7 +112,7 @@ namespace Plasma_Focus.models
 
         public static double peakDiff(Metrics measuredMetrics, Metrics computedMetrics)
         {
-            finalPeakDiff = Math.Abs((measuredMetrics.peak.reading - computedMetrics.peak.reading) / (measuredMetrics.peak.reading/2));// - measuredMetrics.pinch.reading));
+            finalPeakDiff = Math.Abs((measuredMetrics.peak.reading - computedMetrics.peak.reading) / (measuredMetrics.peak.reading - measuredMetrics.pinch.reading));
             if (finalPeakDiff > 1)
                 finalPeakDiff = 1;
             return finalPeakDiff;
@@ -120,7 +120,7 @@ namespace Plasma_Focus.models
 
         public static double peakTimeDiff(Metrics measuredMetrics, Metrics computedMetrics)
         {
-             finalPeakTimeDiff = Math.Abs((measuredMetrics.peak.time - computedMetrics.peak.time) / (measuredMetrics.peak.time/2));// - measuredMetrics.pinch.time));
+             finalPeakTimeDiff = Math.Abs((measuredMetrics.peak.time - computedMetrics.peak.time) / (measuredMetrics.peak.time- measuredMetrics.pinch.time));
              if (finalPeakTimeDiff > 1)
                  finalPeakTimeDiff = 1;
              return finalPeakTimeDiff;            
@@ -130,7 +130,7 @@ namespace Plasma_Focus.models
         {
             if (measuredMetrics.pinch == null)
                 return 0;
-            finalPinchTimeDiff = Math.Abs((measuredMetrics.pinch.time - computedMetrics.pinch.time) / (measuredMetrics.pinch.time/2));// - measuredMetrics.pinch.time));
+            finalPinchTimeDiff = Math.Abs((measuredMetrics.pinch.time - computedMetrics.pinch.time) / (measuredMetrics.peak.time- measuredMetrics.pinch.time));
             if (finalPinchTimeDiff > 1)
                 finalPinchTimeDiff = 1;
             return finalPinchTimeDiff;
@@ -142,7 +142,7 @@ namespace Plasma_Focus.models
         {
             if (measuredMetrics.pinch == null)
                 return 0;
-            finalPinchDiff = Math.Abs((measuredMetrics.pinch.reading - computedMetrics.pinch.reading) / (measuredMetrics.pinch.reading/2));//-measuredMetrics.pinch.reading));
+            finalPinchDiff = Math.Abs((measuredMetrics.pinch.reading - computedMetrics.pinch.reading) / (measuredMetrics.peak.reading -measuredMetrics.pinch.reading));
             if (finalPinchDiff > 1)
                 finalPinchDiff = 1;
             return finalPinchDiff;

@@ -1052,6 +1052,8 @@ namespace Plasma_Focus.views
             Simulator.sync.WaitOne();
             Simulator simulator = Simulator.getInstance();
             machine = simulator.machine;
+    
+            #region graphs
 
             masterPane.PaneList.Clear();
 
@@ -1135,6 +1137,7 @@ namespace Plasma_Focus.views
                 Graph1.AxisChange();
             }
             Graph1.Invalidate();
+#endregion
             Simulator.sync.ReleaseMutex();
 
         }

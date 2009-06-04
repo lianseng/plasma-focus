@@ -93,7 +93,7 @@ namespace Plasma_Focus.models.fitting
 
         public void updateComputedMetrics()
         {
-            s.modelResults.updateModelMetrics(computedMetrics, measuredMetrics.midRadialTime);
+            s.modelResults.updateModelMetrics(computedMetrics);
         }
 
         // where to stop processing
@@ -103,10 +103,11 @@ namespace Plasma_Focus.models.fitting
 
         }
 
-        public double startTime(){
+        public double startTime()
+        {
             return currentData.midRiseTime;
         }
-        
+
         public int tune()
         {
             s = Simulator.getInstance();
@@ -119,13 +120,13 @@ namespace Plasma_Focus.models.fitting
             GAFit.w3 = s.machine.currentData.metrics.peak.reading / (s.machine.currentData.metrics.peak.reading - s.machine.currentData.metrics.pinch.reading);
             GAFit.w4 = GAFit.w3 * 1.2;        // pinch is not accurate
             GAFit.w2 = GAFit.w4 * 1.2;        // peak is the most accurately known
-            
+
             GAFit.a = this;
 
             if (worker.CancellationPending == true) return 0;
 
             double[] start = null;
-
+            #region debug
             GA.debugOpen();
             GA.debugLine("Axial params:, " + GAFit.axialParams.population + ", " + GAFit.axialParams.generations
                 + ", " + GAFit.axialParams.mutation + ", " + GAFit.axialParams.crossover);
@@ -135,35 +136,33 @@ namespace Plasma_Focus.models.fitting
                 + ", " + GAFit.finalParams.mutation + ", " + GAFit.finalParams.crossover);
             GA.debugLine("Fitness params:, " + GAFit.w1 + ", " + GAFit.w2 + ", " + +GAFit.w3 + ", " + +GAFit.w4 + ", ");
             GA.debugLine("Stage,	massf,	currf,	massfr,	currfr,	fitness");
+            #endregion
+            for (int loops = 0; loops < 2; loops++)
+            {
+                if (worker.CancellationPending == true) return 0;
+                start = new double[] { massf, currf, massfr, currfr, R0, L0 };
+                GAFit.evolveAxial(2, start);
+                s.machine.r2 = r2;
 
-            start = new double[] { massf, currf, massfr, currfr, R0, L0 };
-            GAFit.evolveAxial(2, start);
- 
-            if (worker.CancellationPending == true) return 0;            
-            start = new double[] { massf, currf, massfr, currfr, R0, L0 };
-            GAFit.evolveRadial(2, start);
-             
+                if (worker.CancellationPending == true) return 0;
+                start = new double[] { massf, currf, massfr, currfr, R0, L0 };
+                GAFit.evolveRadial(2, start);
+                s.machine.r2 = r2;
+            }
+
             if (worker.CancellationPending == true) return 0;
             start = new double[] { massf, currf, massfr, currfr, R0, L0 };
 
-            int loops = 0;
-            do
-            {
-                start = new double[] { massf, currf, massfr, currfr, R0, L0 };
-                GAFit.evolve(4, start);
+            GAFit.evolve(4, start);
 
-                Debug.WriteLine("Model : " + massf + " " + currf + " " + massfr + " " + currfr);
-                Debug.WriteLine("R2    : " + r2);
-                Debug.WriteLine("Diffs : peak  " + Metrics.finalPeakDiff);
-                Debug.WriteLine("        time  " + Metrics.finalPeakTimeDiff);
-                Debug.WriteLine("        pinch " + Metrics.finalPinchDiff);
-                Debug.WriteLine("        ime   " + Metrics.finalPinchTimeDiff);
-                if (worker.CancellationPending == true) return 0;
-                if (loops++ == RETRIES) break;
-                Debug.WriteLine(loops);
-            } while (r2 < 0.98 || Metrics.finalPinchDiff > 0.4 || Metrics.finalPeakDiff > 0.3);
+            Debug.WriteLine("Model : " + massf + " " + currf + " " + massfr + " " + currfr);
+            Debug.WriteLine("R2    : " + r2);
+            Debug.Write("Diffs : peak  " + Metrics.finalPeakDiff);
+            Debug.WriteLine("        time  " + Metrics.finalPeakTimeDiff);
+            Debug.Write("        pinch " + Metrics.finalPinchDiff);
+            Debug.WriteLine("        time   " + Metrics.finalPinchTimeDiff);
+            if (worker.CancellationPending == true) return 0;
 
-            
             // save to machine
             s = Simulator.getInstance();
 
@@ -180,28 +179,28 @@ namespace Plasma_Focus.models.fitting
             GA.debugLine("");
             GA.debugClose();
 
-            return 0;           
+            return 0;
 
         }
-         
+
         public int tuneElectricals()
         {
 
             s = Simulator.getInstance();
 
             loadParametersFromMachine(s.machine);
-             
             GAFit.w1 = 1;                   // r2 is useful but
-            GAFit.w3 = s.machine.currentData.metrics.pinch.reading / (s.machine.currentData.metrics.peak.reading - s.machine.currentData.metrics.pinch.reading);
-            GAFit.w4 = GAFit.w3 * 2;        // pinch is not accurate
-            GAFit.w2 = GAFit.w4 * 2;        // peak is the most accurately known
-            
+            GAFit.w3 = s.machine.currentData.metrics.peak.reading / (s.machine.currentData.metrics.peak.reading - s.machine.currentData.metrics.pinch.reading);
+            GAFit.w4 = GAFit.w3 * 1.2;        // pinch is not accurate
+            GAFit.w2 = GAFit.w4 * 1.2;        // peak is the most accurately known
+
             // initial guess
             R0 = Math.Sqrt(s.machine.L0 / s.machine.C0) * 0.1;
             L0 = s.machine.L0;
 
             GAFit.a = this;
 
+            #region debug
             GA.debugOpen();
             GA.debugLine("Axial params:, " + GAFit.axialParams.population + ", " + GAFit.axialParams.generations
                 + ", " + GAFit.axialParams.mutation + ", " + GAFit.axialParams.crossover);
@@ -211,48 +210,35 @@ namespace Plasma_Focus.models.fitting
                 + ", " + GAFit.finalParams.mutation + ", " + GAFit.finalParams.crossover);
             GA.debugLine("Fitness params:, " + GAFit.w1 + ", " + GAFit.w2 + ", " + +GAFit.w3 + ", " + +GAFit.w4 + ", ");
             GA.debugLine("Stage,	massf,	currf,	massfr,	currfr,	fitness");
+            #endregion
+            
+            double[] start = new double[] { massf, currf, massfr, currfr, R0, L0 };
 
-            int loops = 0;
-            do
+            for (int loops = 0; loops < 2; loops++)
             {
-                double[] start = new double[] { massf, currf, massfr, currfr, R0, L0 };
                 GAFit.evolveR0(4, start);
 
                 s.machine.L0 = L0;
                 s.machine.R0 = R0;
-                s.machine.massf = massf;
-                s.machine.currf = currf;
-
-                Debug.WriteLine("Model : " + massf + " " + currf + " " + R0 + " " + L0);
-                Debug.WriteLine("R2    : " + r2);
-                Debug.WriteLine("Diffs : peak  " + Metrics.finalPeakDiff);
-                Debug.WriteLine("        time  " + Metrics.finalPeakTimeDiff);
-                Debug.WriteLine("        pinch " + Metrics.finalPinchDiff);
-                Debug.WriteLine("        ime   " + Metrics.finalPinchTimeDiff);
-                if (loops++ == RETRIES) break;
-                
+                s.machine.r2 = r2;
                 if (worker.CancellationPending == true) return 0;
-               
-            } while (r2 < 0.97);
 
-            loops = 0;
-            do
-            {
-                double[] start = new double[] { massf, currf, massfr, currfr, R0, L0 };
+                start = new double[] { massf, currf, massfr, currfr, R0, L0 };
                 GAFit.evolve(4, start);
+                s.machine.L0 = L0;
+                s.machine.R0 = R0;
+                s.machine.r2 = r2;
+                if (worker.CancellationPending == true) return 0;                
+            }
 
-                Debug.WriteLine("Model : " + massf + " " + currf + " " + massfr + " " + currfr);
-                Debug.WriteLine("R2    : " + r2);
-                Debug.WriteLine("Diffs : peak  " + Metrics.finalPeakDiff);
-                Debug.WriteLine("        time  " + Metrics.finalPeakTimeDiff);
-                Debug.WriteLine("        pinch " + Metrics.finalPinchDiff);
-                Debug.WriteLine("        ime   " + Metrics.finalPinchTimeDiff);
-                if (worker.CancellationPending == true) return 0;
-                if (loops++ == RETRIES) break;
-                
-            } while (r2 < 0.98 || Metrics.finalPinchDiff > 0.4 || Metrics.finalPeakDiff > 0.3);
+            Debug.WriteLine("Model : " + massf + " " + currf + " " + massfr + " " + currfr);
+            Debug.WriteLine("R2    : " + r2);
+            Debug.Write("Diffs : peak  " + Metrics.finalPeakDiff);
+            Debug.WriteLine("        time  " + Metrics.finalPeakTimeDiff);
+            Debug.Write("        pinch " + Metrics.finalPinchDiff);
+            Debug.WriteLine("        time   " + Metrics.finalPinchTimeDiff);
+            
 
-           
             // save to machine
             s.machine.massf = massf;
             s.machine.massfr = massfr;
@@ -263,6 +249,7 @@ namespace Plasma_Focus.models.fitting
             s.machine.R0 = R0;
 
             s.machine.r2 = r2; // = updateR2();
+
 
             GA.debugClose();
 

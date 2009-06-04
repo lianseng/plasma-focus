@@ -267,22 +267,9 @@ namespace Plasma_Focus.models
             CurrentReading peak = measured[peakIndex];
             metrics.peak = peak;
             metrics.indexPeak = peakIndex;
-
-            
-            //// pinch should be < 60% of peak current
-            //int maxPinchIndex; double maxPinchTime = 0.6 * measured[metrics.indexPeak].time;
-            //for (maxPinchIndex = metrics.indexPeak + 1; maxPinchIndex < measured.Length; maxPinchIndex++)
-            //    if ((measured[maxPinchIndex].time - measured[metrics.indexPeak].time) > maxPinchTime)
-            //        break;
-
-            //// if (metrics.indexMax == data.Length)
-            //if (maxPinchIndex == measured.Length) maxPinchIndex = measured.Length - 1;
-            
+   
             int maxPinchIndex = measured.Length - 1;
-            Debug.WriteLine("Pinch max at " + measured[maxPinchIndex].time);
-
-       //     metrics.sd = calcSD(measured, metrics.indexPeak, maxPinchIndex);
-       //     Debug.WriteLine("SD " + metrics.sd);
+            Debug.WriteLine("Pinch max at " + measured[maxPinchIndex].time); 
 
             // find the maxPinchIndex of radial phase starting from peak location, add 3 to clear any bumps around peak
             int pinchPos = MeasuredCurrent.findPinch(measured, metrics.indexPeak + 3, maxPinchIndex);
@@ -294,44 +281,30 @@ namespace Plasma_Focus.models
 
             Debug.WriteLine("Pinch at " + measured[pinchPos].time + " current " + measured[pinchPos].reading);
             // return the time 1us after the end of the radiative phase
-
-             int inx = metrics.indexPinch;
-            // decide where the end of the curve should be, coarse traces are a problem...
-            //double time1;
-            //if (currentTimeStep >= 0.01)
-            //    time1 = measured[inx].time + 0.05;
-            //else
-            //    time1 = measured[inx].time + 4 * currentTimeStep;
-
-            //int i;
-            //for (i = inx; i < measured.Length; i++)
-            //{
-            //    if (measured[i].time > time1) break;
-            //}
-            //endTime = measured[i].time;
-
+ 
             if (currentTimeStep >= 0.01)
-                endTime = measured[inx +4].time;
+                endTime = measured[metrics.indexPinch +4].time;
             else if (currentTimeStep >= 0.005)
-                endTime = measured[inx +5].time;
+                endTime = measured[metrics.indexPinch +5].time;
             else
-                endTime = measured[inx + 8].time;
+                endTime = measured[metrics.indexPinch + 8].time;
             int i;
+
             // calculate point at mid radial phase to match
-            metrics.midRadialTime = measured[peakIndex].time + (measured[pinchPos].time - measured[peakIndex].time) / 2;
+            metrics.midRadialCurrent = measured[peakIndex].reading + (measured[pinchPos].reading - measured[peakIndex].reading) / 2;
             for (i = peakIndex; i < measured.Length; i++)
             {
-                if (measured[i].time > metrics.midRadialTime) break;
+                if (measured[i].reading <= metrics.midRadialCurrent) break;
             }
         
-            metrics.midRadialCurrent = measured[i].reading;
+            metrics.midRadialTime = measured[i].time;
 
             metrics.radialSlope = (metrics.pinch.reading - metrics.midRadialCurrent) / (metrics.pinch.time - metrics.midRadialTime);
 
             // calculate a point to start measured R2
-            midRiseTime =measured[peakIndex].time / 2;
+            midRiseTime =measured[peakIndex].time * .75;
 
-            Debug.WriteLine("End time " + endTime + "  radial slope " + metrics.radialSlope +
+            Debug.WriteLine("Start time " + midRiseTime + "End time " + endTime + "  radial slope " + metrics.radialSlope +
                   " mid radial current " + metrics.midRadialCurrent + "  mid radial time: " + metrics.midRadialTime);
             return ;
         }

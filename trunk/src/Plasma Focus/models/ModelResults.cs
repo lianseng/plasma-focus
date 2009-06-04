@@ -75,7 +75,7 @@ namespace Plasma_Focus.models
 
         public List<IterationResult> results = new List<IterationResult>();
 
-        public Metrics metrics;
+        public Metrics metrics; 
 
         // to readings array
         public static CurrentReading[] getComputedCurrentArray(List<IterationResult> list)
@@ -91,24 +91,32 @@ namespace Plasma_Focus.models
             return a;
         }
 
-        public void updateModelMetrics(Metrics metrics, double midRadialTime)
+        public void updateModelMetrics(Metrics metrics)
         {
             Simulator s = Simulator.getInstance(); 
             metrics.peak = new CurrentReading(s.timeMax, s.IPeak);
 
             metrics.indexPinch = s.modelResults.lastRadialRow;//radiativeStartRow; //
-            metrics.pinch = new CurrentReading(s.modelResults.results[metrics.indexPinch].TR,  
-                s.modelResults.results[metrics.indexPinch].IR);
+            double pinchTime = s.modelResults.results[metrics.indexPinch].TR;
+            double pinchCurrent =  s.modelResults.results[metrics.indexPinch].IR;
+
+            
+            metrics.pinch = new CurrentReading(pinchTime, pinchCurrent);
             
             // calculate point at mid radial phase to match
+            //metrics.midRadialTime = s.timeMax + (pinchTime - s.timeMax) / 2;
+            metrics.midRadialCurrent = s.IPeak + (pinchCurrent - s.IPeak) / 2;
             int i;
-            for (i = 0; i < s.expandAxialStartRow; i++)
+            for (i = 0; i < metrics.indexPinch; i++)
             {
-                if (s.modelResults.results[i].TR >= s.timeMax) 
-                 if (s.modelResults.results[i].TR >= midRadialTime) break;
+                if (s.modelResults.results[i].IR >= s.IPeak) break;
             }
+            for (; i < metrics.indexPinch; i++) {                
+                if (s.modelResults.results[i].IR <= metrics.midRadialCurrent) break;
+            }
+            
             metrics.midRadialTime = s.modelResults.results[i].TR;
-            metrics.midRadialCurrent = s.modelResults.results[i].IR;
+           // metrics.midRadialCurrent = s.modelResults.results[i].IR;
 
             metrics.radialSlope= (metrics.pinch.reading - metrics.midRadialCurrent) / 
                                              (metrics.pinch.time - metrics.midRadialTime);
