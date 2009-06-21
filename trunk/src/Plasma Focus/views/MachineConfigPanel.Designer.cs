@@ -79,6 +79,7 @@
             this.LoadModelBtn = new System.Windows.Forms.Button();
             this.currentFilename = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.gboxPresetMachines.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spnInductance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spnCapacitance)).BeginInit();
@@ -109,10 +110,11 @@
             this.cbMachine.AllowDrop = true;
             this.cbMachine.FormattingEnabled = true;
             this.cbMachine.ItemHeight = 13;
-            this.cbMachine.Location = new System.Drawing.Point(194, 21);
+            this.cbMachine.Location = new System.Drawing.Point(121, 21);
             this.cbMachine.Name = "cbMachine";
-            this.cbMachine.Size = new System.Drawing.Size(149, 21);
+            this.cbMachine.Size = new System.Drawing.Size(222, 21);
             this.cbMachine.TabIndex = 0;
+            this.cbMachine.MouseClick += new System.Windows.Forms.MouseEventHandler(this.cbMachine_MouseClick);
             this.cbMachine.SelectedIndexChanged += new System.EventHandler(this.cbMachine_SelectedIndexChanged);
             // 
             // MachineNameLbl
@@ -121,9 +123,9 @@
             this.MachineNameLbl.Location = new System.Drawing.Point(17, 24);
             this.MachineNameLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.MachineNameLbl.Name = "MachineNameLbl";
-            this.MachineNameLbl.Size = new System.Drawing.Size(156, 13);
+            this.MachineNameLbl.Size = new System.Drawing.Size(83, 13);
             this.MachineNameLbl.TabIndex = 22;
-            this.MachineNameLbl.Text = "Enter or select existing machine";
+            this.MachineNameLbl.Text = "Select  machine";
             // 
             // gboxPresetMachines
             // 
@@ -741,6 +743,17 @@
             this.label3.TabIndex = 71;
             this.label3.Text = "Measured Current Filename";
             // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.button1.Location = new System.Drawing.Point(672, 602);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(116, 32);
+            this.button1.TabIndex = 73;
+            this.button1.Text = "Browse";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MachineConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -749,6 +762,7 @@
             this.AutoSize = true;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.currentFilename);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.LoadModelBtn);
@@ -848,6 +862,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox currentFilename;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button1;
 
 
     }

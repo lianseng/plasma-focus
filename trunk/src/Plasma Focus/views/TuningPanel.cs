@@ -137,19 +137,19 @@ namespace Plasma_Focus.views
                 // find goodness of fit, stop before expanded column row
                 CurrentReading[] computed = ModelResults.getComputedCurrentArray(s.modelResults.results);
                 double end = s.machine.currentData.endTime;
-                double start = s.machine.currentData.midRiseTime; 
-                
+                double start = s.machine.currentData.midRiseTime;
+
                 s.modelResults.metrics = new Metrics();
                 s.modelResults.updateModelMetrics(s.modelResults.metrics);
 
                 s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, 0/*start*/, end);
-                 
+
                 Invoke(new MethodInvoker(EnableButton));
-                Invoke(new MethodInvoker(updatePanel)); 
+                Invoke(new MethodInvoker(updatePanel));
             }
             catch (ApplicationException ex)
             {
-                MessageBox.Show(ex.Message, "Run problem", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        //        MessageBox.Show(ex.Message, "Run problem", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
             //      machine = s.machine;
@@ -184,7 +184,7 @@ namespace Plasma_Focus.views
                 s.modelResults.updateModelMetrics(s.modelResults.metrics);
 
                 s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, 0/*start*/, end);
- 
+
                 Invoke(new MethodInvoker(EnableButton));
                 Invoke(new MethodInvoker(updatePanel));
 
@@ -228,8 +228,8 @@ namespace Plasma_Focus.views
         {
 
             progressBar1.Increment(e.ProgressPercentage);
-            progressStatus.Text = e.UserState.ToString(); 
-            if (e.ProgressPercentage ==0) return;
+            progressStatus.Text = e.UserState.ToString();
+            if (e.ProgressPercentage == 0) return;
             updatePanel();
         }
 
@@ -243,6 +243,7 @@ namespace Plasma_Focus.views
             if (machine.currentData != null && machine.currentData.series != null)
             {
                 SortedList<double, double> measured = machine.currentData.series;
+
                 foreach (KeyValuePair<double, double> data in measured)
                 {
                     list.Add(data.Key, data.Value);
@@ -273,20 +274,21 @@ namespace Plasma_Focus.views
                         new double[] { metrics.pinch.reading }, Color.Green);
                 }
 
-                list = new PointPairList();
-                list.Clear();
+                PointPairList list1 = new PointPairList();
+                list1.Clear();
                 foreach (CurrentReading data in processed)
                 {
-                    list.Add(data.time, data.reading);
+                    list1.Add(data.time, data.reading);
                 }
-            }
-            curve1 = myPane.AddCurve("Processed Current", list, Color.Cyan, SymbolType.Plus);
+                curve1 = myPane.AddCurve("Processed Current", list1, Color.Cyan, SymbolType.Plus);
 
-            curve1.Line.Width = 0.1F;
-            curve1.Line.IsSmooth = true;
-            curve1.Line.SmoothTension = 0.6F;
-            //curve1.Symbol.Fill = new Fill(Color.Yellow);
-            curve1.Symbol.Size = 0.1f;
+                curve1.Line.Width = 0.1F;
+                curve1.Line.IsSmooth = true;
+                curve1.Line.SmoothTension = 0.6F;
+                //curve1.Symbol.Fill = new Fill(Color.Yellow);
+                curve1.Symbol.Size = 0.1f;
+
+            }
 
         }
 
@@ -294,80 +296,79 @@ namespace Plasma_Focus.views
         {
             Simulator simulator = Simulator.getInstance();
             machine = simulator.machine;
-            List<IterationResult> results = simulator.modelResults.results;
 
-            if (results.Count <= 0) return;
-
-
-            //int lastRow = simulator.radiativeStartRow;// simulator.modelResults.lastRadialRow;
-
-            PointPairList list = new PointPairList();
-            for (int i = 0; i < simulator.modelResults.firstRadialRow; i++)
+            try
             {
-                IterationResult result = results[i];
+                 List<IterationResult> results =  simulator.modelResults.results;
+ 
 
-                list.Add(result.TR, result.IR);
+                if (results.Count<= 0) return;
+                 
+                //int lastRow = simulator.radiativeStartRow;// simulator.modelResults.lastRadialRow;
+
+                PointPairList list = new PointPairList();
+                for (int i = 0; i < simulator.modelResults.firstRadialRow; i++)
+                {
+                    IterationResult result = results[i];
+
+                    list.Add(result.TR, result.IR);
+                }
+                LineItem curve = myPane.AddCurve("Axial Current", list, Color.Pink, SymbolType.Diamond);
+                curve.Line.Width = 0.1F;
+                curve.Line.IsSmooth = true;
+                curve.Line.SmoothTension = 0.6F;
+                curve.Symbol.Fill = new Fill(Color.White);
+                curve.Symbol.Size = 0.1f;
+ 
+                PointPairList list3 = new PointPairList(); 
+                for (int i = simulator.modelResults.firstRadialRow; i < simulator.radiativeStartRow; i++)
+                {
+                    IterationResult result = results[i];
+
+                    list3.Add(result.TR, result.IR);
+                }
+                curve = myPane.AddCurve("Radial Current", list3, Color.Crimson, SymbolType.Diamond);
+                curve.Line.Width = 0.1f;
+                curve.Line.IsSmooth = true;
+                curve.Line.SmoothTension = 0.6F;
+                curve.Line.Fill = new Fill(Color.Pink);
+                curve.Symbol.Fill = new Fill(Color.White);
+                curve.Symbol.Size = 0.1f;
+                  
+                PointPairList list1 = new PointPairList(); 
+                for (int i = simulator.radiativeStartRow; i < simulator.expandAxialStartRow && i < results.Count; i++)
+                {
+                    IterationResult result = results[i];
+
+                    list1.Add(result.TR, result.IR);
+                } 
+
+                curve = myPane.AddCurve("Pinch Current", list1, Color.DarkOrange, SymbolType.Diamond);
+                curve.Line.Width = 0.1F;
+                curve.Line.IsSmooth = true;
+                curve.Line.SmoothTension = 0.6F;
+                curve.Line.Fill = new Fill(Color.Orange);
+                curve.Symbol.Size = 0.1f;
+ 
+                PointPairList list2 = new PointPairList(); 
+                for (int i = simulator.expandAxialStartRow; i<results.Count; i++)
+                {
+                    IterationResult result = results[i];
+
+                    list2.Add(result.TR, result.IR);
+                }
+                 
+                curve = myPane.AddCurve("Expanded Column Current", list2, Color.Crimson, SymbolType.Diamond);
+                curve.Line.Width = 0.1F;
+                curve.Line.IsSmooth = true;
+                curve.Line.SmoothTension = 0.6F;
+                curve.Symbol.Fill = new Fill(Color.White);
+                curve.Symbol.Size = 0.1f;
             }
-            LineItem curve = myPane.AddCurve("Axial Current", list, Color.Pink, SymbolType.Diamond);
-            curve.Line.Width = 0.1F;
-            curve.Line.IsSmooth = true;
-            curve.Line.SmoothTension = 0.6F;
-            curve.Symbol.Fill = new Fill(Color.White);
-            curve.Symbol.Size = 0.1f;
-
-
-            list = new PointPairList();
-            list.Clear();
-            for (int i = simulator.modelResults.firstRadialRow; i < simulator.radiativeStartRow; i++)
+            catch (Exception ex)
             {
-                IterationResult result = results[i];
-
-                list.Add(result.TR, result.IR);
+                Console.WriteLine(ex.Message);
             }
-            curve = myPane.AddCurve("Radial Current", list, Color.Crimson, SymbolType.Diamond);
-            curve.Line.Width = 0.1f;
-            curve.Line.IsSmooth = true;
-            curve.Line.SmoothTension = 0.6F;
-            curve.Line.Fill = new Fill(Color.Pink);
-            curve.Symbol.Fill = new Fill(Color.White);
-            curve.Symbol.Size = 0.1f;
-
-
-            list = new PointPairList();
-            list.Clear();
-            for (int i = simulator.radiativeStartRow; i < simulator.expandAxialStartRow; i++)
-            {
-                IterationResult result = results[i];
-
-                list.Add(result.TR, result.IR);
-            }
-
-
-            curve = myPane.AddCurve("Pinch Current", list, Color.DarkOrange, SymbolType.Diamond);
-            curve.Line.Width = 0.1F;
-            curve.Line.IsSmooth = true;
-            curve.Line.SmoothTension = 0.6F;
-            curve.Line.Fill = new Fill(Color.Orange);
-            curve.Symbol.Size = 0.1f;
-
-
-            list = new PointPairList();
-            list.Clear();
-            for (int i = simulator.expandAxialStartRow; i < results.Count; i++)
-            {
-                IterationResult result = results[i];
-
-                list.Add(result.TR, result.IR);
-            }
-
-
-            curve = myPane.AddCurve("Expanded Column Current", list, Color.Crimson, SymbolType.Diamond);
-            curve.Line.Width = 0.1F;
-            curve.Line.IsSmooth = true;
-            curve.Line.SmoothTension = 0.6F;
-            curve.Symbol.Fill = new Fill(Color.White);
-            curve.Symbol.Size = 0.1f;
-
 
         }
 
@@ -488,11 +489,35 @@ namespace Plasma_Focus.views
         private void SaveBtn_Click(object sender, EventArgs e)
         {
             MainForm main = ((MainForm)(this.ParentForm));
+            main.configurationPanel.updatePanel();
             main.configurationPanel.saveAsModel();
 
             this.Invalidate();
         }
         #endregion
+
+
+        private void ResetBtn_Click(object sender, EventArgs e)
+        {
+
+            MainForm main = ((MainForm)(this.ParentForm));
+            main.configurationPanel.initializeMachine(machine.configFile);
+
+            // convert to SI
+            R0.Value = (decimal)(machine.R0 * 1000);
+            L0.Value = (decimal)(machine.L0 * 1e9);
+            C0.Value = (decimal)(machine.C0 * 1e6);
+
+            massf.Value = (decimal)(machine.massf);
+            massfr.Value = (decimal)(machine.massfr);
+            currf.Value = (decimal)(machine.currf);
+            currfr.Value = (decimal)(machine.currfr);
+
+
+            redraw(null);
+            CurrentGraph.Invalidate();
+
+        }
 
         public void reLoadConfig(ref PlasmaFocusMachine machine)
         {
@@ -551,7 +576,6 @@ namespace Plasma_Focus.views
             L0.Value = (decimal)(machine.L0 * 1e9);
             C0.Value = (decimal)(machine.C0 * 1e6);
             R2.Text = String.Format("{0:0.####}", machine.r2);
-            
 
             drawCurrentGraph(zoom);
             this.Invalidate();
@@ -560,35 +584,39 @@ namespace Plasma_Focus.views
 
         public void updatePanel()
         {
-
-            Simulator.sync.WaitOne();
-
-            redraw(null);
-
-            Simulator.sync.ReleaseMutex();    
-            
-            updateFitness();       
+            try
+            {
+                Simulator.sync.WaitOne();
+                redraw(null);
+                updateFitness();
+                Simulator.sync.ReleaseMutex();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
-      
-        public void updateFitness() {
-             Simulator s = Simulator.getInstance();
-             machine = s.machine;
 
-             R2.Text = String.Format("{0:0.####}", s.machine.r2);
-             
-             if (s.machine.currentData==null || s.modelResults == null || s.modelResults.metrics==null) 
-                 return;
- 
-             Metrics measuredMetrics = s.machine.currentData.metrics;
-             Metrics computedMetrics =  s.modelResults.metrics;
+        public void updateFitness()
+        {
+            Simulator s = Simulator.getInstance();
+            machine = s.machine;
 
-             PeakError.Text = String.Format("{0:0.####}", Metrics.peakDiff(measuredMetrics, computedMetrics));
-             PinchError.Text = String.Format("{0:0.####}", Metrics.pinchDiff(measuredMetrics, computedMetrics));
-             SlopeError.Text = String.Format("{0:0.####}", Metrics.radialSlopeDiff(measuredMetrics, computedMetrics));
+            R2.Text = String.Format("{0:0.####}", s.machine.r2);
 
-             this.Invalidate(); 
-            
+            if (s.machine.currentData == null || s.modelResults == null || s.modelResults.metrics == null)
+                return;
+
+            Metrics measuredMetrics = s.machine.currentData.metrics;
+            Metrics computedMetrics = s.modelResults.metrics;
+
+            PeakError.Text = String.Format("{0:0.####}", Metrics.peakDiff(measuredMetrics, computedMetrics));
+            PinchError.Text = String.Format("{0:0.####}", Metrics.pinchDiff(measuredMetrics, computedMetrics));
+            SlopeError.Text = String.Format("{0:0.####}", Metrics.radialSlopeDiff(measuredMetrics, computedMetrics));
+
+            this.Invalidate();
+
         }
 
 
@@ -657,7 +685,7 @@ namespace Plasma_Focus.views
 
                 s.machine.r2 = MeasuredCurrent.calcR2(s.machine.currentData.array, computed, 0/*start*/, end);
 
-                s.machine.currentData.reload(); 
+                s.machine.currentData.reload();
                 CurrentGraph.Invalidate();
                 updateFitness();
             }
@@ -688,22 +716,6 @@ namespace Plasma_Focus.views
             progressStatus.Visible = progressBar1.Visible = false;
             timer1.Stop();
             PickPinchBtn.Enabled = TuneElectrical.Enabled = FineTuneBtn.Enabled = FireBtn.Enabled = ReTuneBtn.Enabled = true;
-        }
-
-        private void ResetBtn_Click(object sender, EventArgs e)
-        {
-
-            MainForm main = ((MainForm)(this.ParentForm));
-            main.configurationPanel.initializeMachine(machine.configFile);
-
-            // convert to SI
-            machine.R0 = machine.R0 / 1000;
-            machine.L0 = (machine.L0 * 1e-9);
-            machine.C0 = (machine.C0 * 1e-6);
-
-            redraw(null);
-            CurrentGraph.Invalidate();
-
         }
 
         private void HelpBtn_Click(object sender, EventArgs e)
@@ -746,19 +758,26 @@ namespace Plasma_Focus.views
 
         private void FineTuneBtn_Click(object sender, EventArgs e)
         {
-            Simulator s = Simulator.getInstance();
-            machine = s.machine;
+            try
+            {
+                Simulator s = Simulator.getInstance();
+                machine = s.machine;
 
-            DisableButtons();
+                DisableButtons();
 
-            // continue from current settings
-            reLoadConfig(ref machine);
+                // continue from current settings
+                reLoadConfig(ref machine);
 
-            machine.currentData.metrics.pinch.reading = (double)PinchCurrent.Value;
-            machine.currentData.metrics.pinch.time = (double)PinchTime.Value;
+                machine.currentData.metrics.pinch.reading = (double)PinchCurrent.Value;
+                machine.currentData.metrics.pinch.time = (double)PinchTime.Value;
 
-            if (!tuningThread.IsBusy)
-                tuningThread.RunWorkerAsync();
+                if (!tuningThread.IsBusy)
+                    tuningThread.RunWorkerAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
         }
 
@@ -784,7 +803,7 @@ namespace Plasma_Focus.views
             machine.currentData.metrics.pinch.time = (double)PinchTime.Value;
 
             if (!tuningElectricalsThread.IsBusy)
-                tuningElectricalsThread.RunWorkerAsync(); 
+                tuningElectricalsThread.RunWorkerAsync();
 
         }
 

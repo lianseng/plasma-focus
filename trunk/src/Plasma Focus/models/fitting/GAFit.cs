@@ -82,7 +82,7 @@ namespace Plasma_Focus.models.fitting
                 a.updateComputedMetrics();
 
                 // here we use .75 peak rise time as the start time 
-                r2 = MeasuredCurrent.calcR2(a.computed, a.measured,a.startTime(), a.endTime());
+                r2 = MeasuredCurrent.calcR2(a.measured, a.computed,a.startTime(), a.endTime());
                 double p1 = 1 - (Metrics.peakDiff(a.measuredMetrics, a.computedMetrics));
 
                 double t1 = 1 - (Metrics.peakTimeDiff(a.measuredMetrics, a.computedMetrics));
@@ -187,14 +187,15 @@ namespace Plasma_Focus.models.fitting
             return fit;
         }
 
+       
         public static ArrayList evolveRadial( int genomeSize, double[] start)
         {
-
             GA ga = new GA(radialParams.crossover, radialParams.mutation, radialParams.population,
                               radialParams.generations, radialParams.elitism, genomeSize);
 
             ga.FitnessFunction = new GAFunction(radialFitness);
-             
+            
+            
             a.massfr = start[2];
             a.currfr = start[3];
 
@@ -209,16 +210,110 @@ namespace Plasma_Focus.models.fitting
 
             double[] values;
             ga.GetBest(out values, out fitness);
-
+            
             a.massfr = values[0];
             a.currfr = values[1];
-            a.r2 = fitness;
 
+            a.r2 = fitness;
             writeQuality(ga.stage);
-           return genome;
+            return genome;
 
         }
 
+        public static double radialFitness1(double[] values)
+        {
+
+            a.massf = values[0];
+            a.massfr = values[1];
+
+            double fit = run(w1, w2, w3, w4);
+            if (Double.IsNaN(fit) || Double.IsInfinity(fit)) fit = 0;
+            return fit;
+        }
+
+
+        public static ArrayList evolveMassf(int genomeSize, double[] start)
+        {
+            GA ga = new GA(radialParams.crossover, radialParams.mutation, radialParams.population,
+                              radialParams.generations, radialParams.elitism, genomeSize);
+
+            ga.FitnessFunction = new GAFunction(radialFitness1);
+
+
+            a.massf = start[0]; 
+            a.massfr = start[2];
+            
+            double[] gene = new double[] { start[0], start[2] };
+
+            reportProgress(0, "Tuning radial stage 2");
+            GA.report = new ReportProgress(reportProgress);
+            ga.worker = a.worker;
+
+            ga.stage = "Radial stage 2";
+            ArrayList genome = ga.Go(gene, false);
+
+            double[] values;
+            ga.GetBest(out values, out fitness);
+
+       //      if ( values[1] > a.maxMassfr)
+            { 
+                a.massf = values[0];
+                a.maxMassfr = a.massfr = values[1];
+
+                a.r2 = fitness;
+            }
+            writeQuality(ga.stage);
+            return genome;
+
+        }
+
+
+        public static double radialFitness2(double[] values)
+        {
+
+            a.currf = values[0];
+            a.massfr = values[1];
+
+            double fit = run(w1, w2, w3, w4);
+            if (Double.IsNaN(fit) || Double.IsInfinity(fit)) fit = 0;
+            return fit;
+        }
+  
+        public static ArrayList evolveMassfr(int genomeSize, double[] start)
+        {
+            GA ga = new GA(radialParams.crossover, radialParams.mutation, radialParams.population,
+                              radialParams.generations, radialParams.elitism, genomeSize);
+
+            ga.FitnessFunction = new GAFunction(radialFitness2);
+
+
+            a.currf = start[1];
+            a.massfr = start[2];
+
+            double[] gene = new double[] { start[1], start[2] };
+
+            reportProgress(0, "Tuning radial stage 3");
+            GA.report = new ReportProgress(reportProgress);
+            ga.worker = a.worker;
+
+            ga.stage = "Radial stage 3";
+            ArrayList genome = ga.Go(gene, false);
+
+            double[] values;
+            ga.GetBest(out values, out fitness);
+
+         //    if ( values[1] > a.maxMassfr)
+            {
+                  
+                a.currf = values[0];
+                a.maxMassfr = a.massfr = values[1];
+
+                a.r2 = fitness;
+            }
+            writeQuality(ga.stage);
+            return genome;
+
+        }
 
         #endregion radial
 
@@ -246,7 +341,7 @@ namespace Plasma_Focus.models.fitting
             ga.worker = a.worker;
 
             ga.stage = "Final stage"; 
-            ArrayList genome = ga.Go(gene, true);//false);
+            ArrayList genome = ga.Go(gene, false);
 
             double[] values;
             ga.GetBest(out values, out fitness);

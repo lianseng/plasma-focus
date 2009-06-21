@@ -47,7 +47,7 @@ namespace Plasma_Focus.models.fitting.ga
 
     public class GA
     {
-        int MutationFactor = 50;
+        int MutationFactor = 2;
         #region debug
         static StreamWriter sw = null;
 
