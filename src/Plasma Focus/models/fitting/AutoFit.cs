@@ -73,10 +73,13 @@ namespace Plasma_Focus.models.fitting
 
         const int RETRIES = 2;
 
+        public double maxMassfr = 0;
+
         public AutoFit(System.ComponentModel.BackgroundWorker worker, CurrentReading pinch)
         {
             this.worker = worker;
 
+            maxMassfr = 0;
             // process measured current
             s = Simulator.getInstance();
             currentData = s.machine.currentData;
@@ -93,6 +96,7 @@ namespace Plasma_Focus.models.fitting
 
         public void updateComputedMetrics()
         {
+            computed = ModelResults.getComputedCurrentArray(s.modelResults.results);
             s.modelResults.updateModelMetrics(computedMetrics);
         }
 
@@ -137,8 +141,11 @@ namespace Plasma_Focus.models.fitting
             GA.debugLine("Fitness params:, " + GAFit.w1 + ", " + GAFit.w2 + ", " + +GAFit.w3 + ", " + +GAFit.w4 + ", ");
             GA.debugLine("Stage,	massf,	currf,	massfr,	currfr,	fitness");
             #endregion
-            for (int loops = 0; loops < 2; loops++)
+
+            r2 = 0; int loops = 0;
+            while (r2 < 0.9 )
             {
+
                 if (worker.CancellationPending == true) return 0;
                 start = new double[] { massf, currf, massfr, currfr, R0, L0 };
                 GAFit.evolveAxial(2, start);
@@ -151,12 +158,27 @@ namespace Plasma_Focus.models.fitting
 
                 if (worker.CancellationPending == true) return 0;
                 start = new double[] { massf, currf, massfr, currfr, R0, L0 };
-
-                GAFit.evolve(4, start);
+                GAFit.evolveMassf(2, start);
                 s.machine.r2 = r2;
 
-            }
 
+                if (worker.CancellationPending == true) return 0;
+                start = new double[] { massf, currf, massfr, currfr, R0, L0 };
+                GAFit.evolveMassfr(2, start);
+                s.machine.r2 = r2;
+
+
+                if (worker.CancellationPending == true) return 0;
+                start = new double[] { massf, currf, massfr, currfr, R0, L0 };
+                GAFit.evolve(4, start);
+                s.machine.r2 = r2;
+ 
+                if ( r2< 0.9)
+                    findAltPinch();
+
+                if (loops++ == 1) break;
+                
+            }
 
             Debug.WriteLine("Model : " + massf + " " + currf + " " + massfr + " " + currfr);
             Debug.WriteLine("R2    : " + r2);
@@ -186,6 +208,18 @@ namespace Plasma_Focus.models.fitting
 
         }
 
+        public void findAltPinch()
+        {
+
+            // find the maxPinchIndex of radial phase starting from peak location, add 3 to clear any bumps around peak
+            int pinchPos = MeasuredCurrent.findPinch(measured, measuredMetrics.indexPeak + 3, measuredMetrics.indexPinch - 2);
+            if (pinchPos == measuredMetrics.indexPeak + 1)
+                return;
+
+            measuredMetrics.indexPinch = pinchPos;
+            measuredMetrics.pinch = measured[pinchPos];
+
+        }
         public int tuneElectricals()
         {
 
@@ -214,7 +248,7 @@ namespace Plasma_Focus.models.fitting
             GA.debugLine("Fitness params:, " + GAFit.w1 + ", " + GAFit.w2 + ", " + +GAFit.w3 + ", " + +GAFit.w4 + ", ");
             GA.debugLine("Stage,	massf,	currf,	massfr,	currfr,	fitness");
             #endregion
-            
+
             double[] start = new double[] { massf, currf, massfr, currfr, R0, L0 };
 
             for (int loops = 0; loops < 2; loops++)
@@ -231,7 +265,7 @@ namespace Plasma_Focus.models.fitting
                 s.machine.L0 = L0;
                 s.machine.R0 = R0;
                 s.machine.r2 = r2;
-                if (worker.CancellationPending == true) return 0;                
+                if (worker.CancellationPending == true) return 0;
             }
 
             Debug.WriteLine("Model : " + massf + " " + currf + " " + massfr + " " + currfr);
@@ -240,7 +274,7 @@ namespace Plasma_Focus.models.fitting
             Debug.WriteLine("        time  " + Metrics.finalPeakTimeDiff);
             Debug.Write("        pinch " + Metrics.finalPinchDiff);
             Debug.WriteLine("        time   " + Metrics.finalPinchTimeDiff);
-            
+
 
             // save to machine
             s.machine.massf = massf;

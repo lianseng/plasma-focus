@@ -62,7 +62,6 @@ namespace Plasma_Focus.views
             isCurrentFilenameChanged = newLoad = false;
 
         }
-
  
         private void spnInductance_ValueChanged(object sender, EventArgs e)
         {
@@ -185,15 +184,13 @@ namespace Plasma_Focus.views
                 spnTaperStart.Value = spnTaperStart.Value;
             }
         }
-
-         
+        
         private void spnTaperEnd_ValueChanged(object sender, EventArgs e)
         {
             Simulator instance = Simulator.getInstance();
             machine = instance.machine;
             machine.ENDRAD = (double)spnTaperEnd.Value*0.01;
         }
-
 
         private void spnTaperStart_ValueChanged(object sender, EventArgs e)
         {
@@ -236,7 +233,7 @@ namespace Plasma_Focus.views
                 currentFilename.Text = model.currentData.dataFilename; 
             else currentFilename.Text = "";
 
-            cbMachine.Text = model.machineName;   // note this triggers SelectedIndexChanged on the combobox !
+            cbMachine.Text = model.configFile; //model.machineName;   // note this triggers SelectedIndexChanged on the combobox !
             spnInductance.Value = (decimal)(model.L0);
 
             spnCapacitance.Value = (decimal)(model.C0);
@@ -651,7 +648,7 @@ namespace Plasma_Focus.views
         private void MachineConfigPanel_Leave(object sender, EventArgs e)
         {
             Simulator s = Simulator.getInstance();
-            machine = s.machine;
+            machine = s.machine; 
             if (machine.machineName == null)
                 return;
 
@@ -660,6 +657,30 @@ namespace Plasma_Focus.views
                 machine.currentData = new MeasuredCurrent(currentFilename.Text);
                 isCurrentFilenameChanged = false;
             } 
+        }
+
+        private void cbMachine_MouseClick(object sender, MouseEventArgs e)
+        {
+            loadModelsFromDefaultDirectory();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Create the dialog box object.
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.InitialDirectory = ConfigIniFile.modelDirectory;
+            ofd.CheckPathExists = true;
+            ofd.AddExtension = true;
+            ofd.DefaultExt = "csv";
+            ofd.ShowReadOnly = false;
+
+            if (ofd.ShowDialog() == DialogResult.Cancel)
+                return;
+
+            string pathname = System.IO.Path.GetFullPath(ofd.FileName);
+            currentFilename.Text = pathname;
+            
         }
  
 

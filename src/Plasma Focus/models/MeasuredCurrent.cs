@@ -380,6 +380,9 @@ namespace Plasma_Focus.models
             return (iPinch);
         }
 
+ 
+
+
         public CurrentReading[] getMeasuredCurrentArray(SortedList<double, double> data)
         {
             // remove all the negative values from data curve
