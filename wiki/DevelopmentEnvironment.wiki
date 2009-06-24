@@ -1,7 +1,7 @@
 #labels Featured
 = Tools =
-*  [http://www.microsoft.com/exPress/download Microsoft C# Visual Studio Express]
-*  [http://zedgraph.org zedgraph] library
+a. [http://www.microsoft.com/exPress/download Microsoft C# Visual Studio Express] IDE
+b. [http://zedgraph.org zedgraph] library
     
 The zedgraph dll is provided with the sources.  Please refer to their website for details of the LGPL license.
 
@@ -9,3 +9,4 @@ The zedgraph dll is provided with the sources.  Please refer to their website fo
 a.  After installing the Visual Studio Express, click on the .csproj file provided in the sources
 b.  Check that the zedgraph dll is added as a reference
 c.  Set the working directory in VSE to where you put the "models" folder, and the config.ini, help.txt files.  This allows the debugging of the code.
+
