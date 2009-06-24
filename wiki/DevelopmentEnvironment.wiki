@@ -1,8 +1,8 @@
 #labels Featured
 = Tools =
-a.  [http://www.microsoft.com/exPress/download Microsoft C# Visual Studio Express]
-b.  [http://zedgraph.org zedgraph] library
-----    
+*  [http://www.microsoft.com/exPress/download Microsoft C# Visual Studio Express]
+*  [http://zedgraph.org zedgraph] library
+    
 The zedgraph dll is provided with the sources.  Please refer to their website for details of the LGPL license.
 
 = Details =
