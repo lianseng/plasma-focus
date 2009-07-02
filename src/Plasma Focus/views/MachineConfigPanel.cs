@@ -346,6 +346,7 @@ namespace Plasma_Focus.views
             if (saveFileDlg.ShowDialog() == DialogResult.OK)
             {
                 saveModel(saveFileDlg.FileName);
+                cbMachine.Text = saveFileDlg.FileName;
 
             }
         }
