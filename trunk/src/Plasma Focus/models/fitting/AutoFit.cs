@@ -121,7 +121,7 @@ namespace Plasma_Focus.models.fitting
             loadParametersFromMachine(s.machine);
 
             GAFit.w1 = 1;                   // r2 is useful but
-            GAFit.w3 = s.machine.currentData.metrics.peak.reading / (s.machine.currentData.metrics.peak.reading - s.machine.currentData.metrics.pinch.reading);
+            GAFit.w3 = s.machine.currentData.metrics.peak.reading / (/*s.machine.currentData.metrics.peak.reading - */s.machine.currentData.metrics.pinch.reading);
             GAFit.w4 = GAFit.w3 * 0.5;        // pinch is not accurate
             GAFit.w2 = GAFit.w4 * 2;        // peak is the most accurately known
 

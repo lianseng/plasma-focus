@@ -31,7 +31,6 @@
             this.cbMachine = new System.Windows.Forms.ComboBox();
             this.MachineNameLbl = new System.Windows.Forms.Label();
             this.gboxPresetMachines = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.lblL0 = new System.Windows.Forms.Label();
             this.spnInductance = new System.Windows.Forms.NumericUpDown();
@@ -112,7 +111,7 @@
             this.cbMachine.ItemHeight = 13;
             this.cbMachine.Location = new System.Drawing.Point(121, 21);
             this.cbMachine.Name = "cbMachine";
-            this.cbMachine.Size = new System.Drawing.Size(222, 21);
+            this.cbMachine.Size = new System.Drawing.Size(387, 21);
             this.cbMachine.TabIndex = 0;
             this.cbMachine.MouseClick += new System.Windows.Forms.MouseEventHandler(this.cbMachine_MouseClick);
             this.cbMachine.SelectedIndexChanged += new System.EventHandler(this.cbMachine_SelectedIndexChanged);
@@ -129,7 +128,6 @@
             // 
             // gboxPresetMachines
             // 
-            this.gboxPresetMachines.Controls.Add(this.label2);
             this.gboxPresetMachines.Controls.Add(this.MachineNameLbl);
             this.gboxPresetMachines.Controls.Add(this.cbMachine);
             this.gboxPresetMachines.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -139,16 +137,6 @@
             this.gboxPresetMachines.TabIndex = 68;
             this.gboxPresetMachines.TabStop = false;
             this.gboxPresetMachines.Text = "Machine Name";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(357, 24);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(112, 13);
-            this.label2.TabIndex = 23;
-            this.label2.Text = "(in MODELS directory)";
             // 
             // button2
             // 
@@ -859,7 +847,6 @@
         private System.Windows.Forms.CheckBox cbTapered;
         private System.Windows.Forms.Button saveModelButton;
         private System.Windows.Forms.Button LoadModelBtn;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox currentFilename;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button1;
