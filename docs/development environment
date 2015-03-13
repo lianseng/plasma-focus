@@ -1,0 +1,6 @@
+Tools
+a. Microsoft C# Visual Studio Express IDE b. zedgraph library The zedgraph dll is provided with the sources. Please refer to their website for details of the LGPL license.
+
+Details
+a. After installing the Visual Studio Express, click on the .csproj file provided in the sources b. Check that the zedgraph dll is added as a reference c. Set the working directory in VSE to where you put the "models" folder, and the config.ini, help.txt files. 
+This allows the debugging of the code.
